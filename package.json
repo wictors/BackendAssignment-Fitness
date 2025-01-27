@@ -20,6 +20,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
     "cross-env": "7.0.2",
+    "dotenv": "^16.4.7",
     "eslint": "^7.12.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.1",
@@ -29,5 +30,8 @@
     "sequelize": "^5.21.3",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.8"
   }
 }

@@ -3,15 +3,18 @@ import express from 'express'
 import * as bodyParser from 'body-parser'
 
 import { sequelize } from './db'
-import ProgramRouter from './routes/programs'
-import ExerciseRouter from './routes/exercises'
+import publicRoutes from './routes/public'
+import privateRoutes from './routes/private'
 
 const app = express()
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use('/programs', ProgramRouter())
-app.use('/exercises', ExerciseRouter())
+
+app.use(publicRoutes());
+app.use(privateRoutes());
+
+
 
 const httpServer = http.createServer(app)
 
