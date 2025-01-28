@@ -4,6 +4,7 @@ import {
     Sequelize,
     DataTypes,
 } from 'sequelize'
+import bcrypt from 'bcrypt'
 import { DatabaseModel } from '../types/db'
 import { USER_ROLE } from '../utils/enums'
 
@@ -37,21 +38,31 @@ export default (sequelize: Sequelize) => {
         },
         email: {
             type: DataTypes.STRING(200),
+            allowNull: false,
         },
         age: {
             type: DataTypes.INTEGER,
         },
         role: {
-            type: DataTypes.ENUM(...Object.values(USER_ROLE))
+            type: DataTypes.ENUM(...Object.values(USER_ROLE)),
+            allowNull: false,
         },
         password: {
             type: DataTypes.STRING(200),
+            allowNull: false,
+
         }
     }, {
         paranoid: true,
         timestamps: true,
         sequelize,
-        modelName: 'user'
+        modelName: 'user',
+        hooks: {
+            beforeCreate: (user: UserModel) => {
+                const salt = bcrypt.genSaltSync();
+                user.password = bcrypt.hashSync(user.password, salt);
+            }
+        }
     })
 
     UserModel.associate = (models) => {
