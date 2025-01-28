@@ -2,8 +2,7 @@
 
 import {
 	Sequelize,
-	DataTypes,
-	Model
+	DataTypes
 } from 'sequelize'
 import { DatabaseModel } from '../types/db'
 import { ProgramModel } from './program'
@@ -45,6 +44,11 @@ export default (sequelize: Sequelize) => {
 				name: 'programID',
 				allowNull: false
 			},
+			as: 'programDetails'
+		}),
+		(ExerciseModel as any).belongsToMany(models.User, {
+			through: models.UserExercise,
+			as: 'userExercises',
 		})
 	}
 

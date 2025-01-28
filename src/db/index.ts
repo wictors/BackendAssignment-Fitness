@@ -6,8 +6,10 @@ import { Sequelize } from 'sequelize'
 
 import defineExercise from './exercise'
 import defineProgram from './program'
+import defineUserExercise from './user_exercise'
+import defineUser from './user'
 
-const sequelize: Sequelize = new Sequelize('postgresql://localhost:5432/fitness_app', {
+const sequelize: Sequelize = new Sequelize('postgresql://postgres:1234@192.168.0.108:5432/fitness_app', {
 	logging: false
 })
 
@@ -15,6 +17,8 @@ sequelize.authenticate().catch((e: any) => console.error(`Unable to connect to t
 
 const modelsBuilder = (instance: Sequelize) => ({
 	// Import models to sequelize
+	UserExercise: instance.import(path.join(__dirname, 'user_exercise'), defineUserExercise),
+	User: instance.import(path.join(__dirname, 'user'), defineUser),
 	Exercise: instance.import(path.join(__dirname, 'exercise'), defineExercise),
 	Program: instance.import(path.join(__dirname, 'program'), defineProgram),
 })
