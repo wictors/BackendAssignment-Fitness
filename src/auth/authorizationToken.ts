@@ -17,9 +17,10 @@ export const authenticateToken = (
       return res.status(401).json({ message: 'Access Denied' });
     }
 
-    const verified = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    if (verified) {
-      return res.send('Successfully Verified');
+    const verified = jwt.verify(token, process.env.JWT_SECRET_KEY) as UserModel;
+    if (verified.role) {
+      req.body.user = verified;
+      next();
     } else {
       return res.status(401).send('Access Denied');
     }
