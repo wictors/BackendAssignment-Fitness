@@ -10,6 +10,7 @@ export class ExerciseModel extends DatabaseModel {
   id: number;
   difficulty: EXERCISE_DIFFICULTY;
   name: String;
+  programID: number;
 
   program: ProgramModel;
 }

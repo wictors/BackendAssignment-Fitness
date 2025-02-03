@@ -14,6 +14,10 @@ app.use(bodyParser.json());
 app.use(publicRoutes());
 app.use(adminRoutes());
 
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
 const httpServer = http.createServer(app);
 
 sequelize.sync();
