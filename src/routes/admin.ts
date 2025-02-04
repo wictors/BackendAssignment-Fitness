@@ -149,9 +149,9 @@ export default () => {
           attributes: {
             exclude: ['password', 'createdAt', 'updatedAt', 'deletedAt'],
           },
-        })) as UserModel;
+        })) as UserModel[];
 
-        if (!users) {
+        if (!users || !users.length) {
           return res.status(404).json({
             message: 'No users exist',
           });
@@ -172,8 +172,8 @@ export default () => {
 
   /**Get user by id or email and boolean flag to include exercises
    * @route GET /user
-   * @param {number} req.body.id Required
-   * @param {string} req.body.email Required
+   * @param {number} req.body.id Required or
+   * @param {string} req.body.email Required or
    * @param {boolean} req.body.exercises
    */
   router.get(
@@ -211,9 +211,9 @@ export default () => {
           attributes: {
             exclude: ['password', 'createdAt', 'updatedAt', 'deletedAt'],
           },
-        })) as UserModel;
+        })) as UserModel[];
 
-        if (!user) {
+        if (!user || !user.length) {
           return res.status(404).json({
             message: 'User not found',
           });
@@ -359,7 +359,7 @@ export default () => {
 
       res.json({
         data: user,
-        message: 'User role updated',
+        message: 'User updated',
       });
     } catch (err) {
       return res.status(500).json({

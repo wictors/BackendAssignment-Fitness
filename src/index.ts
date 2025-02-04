@@ -13,8 +13,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(publicRoutes());
-app.use(adminRoutes());
-app.use(userRoutes());
+app.use('/admin', adminRoutes());
+app.use('/user', userRoutes());
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });

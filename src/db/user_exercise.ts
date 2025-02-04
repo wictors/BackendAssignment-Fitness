@@ -2,8 +2,6 @@
 
 import { Sequelize, DataTypes } from 'sequelize';
 import { DatabaseModel } from '../types/db';
-import { UserModel } from './user';
-import { ExerciseModel } from './exercise';
 
 export class UserExerciseModel extends DatabaseModel {
   id: number;
@@ -29,6 +27,7 @@ export default (sequelize: Sequelize) => {
           model: 'user',
           key: 'id',
         },
+        unique: false,
       },
       exerciseId: {
         type: DataTypes.BIGINT,
@@ -37,6 +36,7 @@ export default (sequelize: Sequelize) => {
           model: 'exercise',
           key: 'id',
         },
+        unique: false,
       },
       completedAt: {
         type: DataTypes.DATE,
@@ -52,8 +52,20 @@ export default (sequelize: Sequelize) => {
       timestamps: true,
       sequelize,
       modelName: 'user_exercise',
+      indexes: [
+        {
+          fields: ['userId', 'exerciseId'],
+          unique: false,
+        },
+      ],
     },
   );
+
+  UserExerciseModel.associate = (models) => {
+    (UserExerciseModel as any).belongsTo(models.Exercise, {
+      foreignKey: 'exerciseId',
+    });
+  };
 
   return UserExerciseModel;
 };

@@ -9,7 +9,7 @@ import { UserModel } from '../db/user';
 
 const router: Router = Router();
 
-const { Program, Exercise } = models;
+const { Program } = models;
 
 const checkRegistration = [
   body('email').isEmail().withMessage('Invalid email'),
@@ -22,6 +22,7 @@ const checkRegistration = [
 ];
 
 export default () => {
+  // Nobody has access to list of programs by requirements, so stay public :)
   router.get(
     '/programs',
     async (_req: Request, res: Response, _next: NextFunction) => {
@@ -29,25 +30,6 @@ export default () => {
       return res.json({
         data: programs,
         message: 'List of programs',
-      });
-    },
-  );
-
-  router.get(
-    '/exercises',
-    async (_req: Request, res: Response, _next: NextFunction) => {
-      const exercises = await Exercise.findAll({
-        include: [
-          {
-            model: Program,
-            as: 'program',
-          },
-        ],
-      });
-
-      return res.json({
-        data: exercises,
-        message: 'List of exercises',
       });
     },
   );

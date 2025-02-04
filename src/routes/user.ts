@@ -26,12 +26,10 @@ export default () => {
     async (_req: Request, res: Response, _next: NextFunction) => {
       try {
         const users = (await UserModel.findAll({
-          attributes: {
-            include: ['id', 'nickName'],
-          },
-        })) as UserModel;
+          attributes: ['id', 'nickName'],
+        })) as UserModel[];
 
-        if (!users) {
+        if (!users || !users.length) {
           return res.status(404).json({
             message: 'No users exist',
           });
@@ -67,7 +65,6 @@ export default () => {
               attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
               through: {
                 attributes: ['id', 'completedAt', 'duration'],
-                where: { deletedAt: null },
               },
             },
           ],
@@ -104,7 +101,7 @@ export default () => {
       try {
         const reqUser = _req.body.user as UserModel;
         const completedExercises = (await UserExerciseModel.findAll({
-          where: { userId: reqUser.id, completedAt: { [Op.ne]: null } },
+          where: { userId: reqUser.id },
           attributes: ['id', 'completedAt', 'duration'],
           include: [
             {
@@ -112,9 +109,9 @@ export default () => {
               attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
             },
           ],
-        })) as UserExerciseModel;
+        })) as UserExerciseModel[];
 
-        if (!completedExercises) {
+        if (!completedExercises || !completedExercises.length) {
           return res.status(404).json({
             message: 'No completed exercises',
           });
