@@ -1,9 +1,14 @@
 /* eslint import/no-cycle: 0 */
 
-import { Sequelize, DataTypes } from 'sequelize';
+import {
+  Sequelize,
+  DataTypes,
+  BelongsToManyAddAssociationMixin,
+} from 'sequelize';
 import bcrypt from 'bcrypt';
 import { DatabaseModel } from '../types/db';
 import { USER_ROLE } from '../utils/enums';
+import { ExerciseModel } from './exercise';
 
 export class UserModel extends DatabaseModel {
   id: number;
@@ -14,6 +19,8 @@ export class UserModel extends DatabaseModel {
   age: number;
   role: USER_ROLE;
   password: string;
+
+  public addExercise!: BelongsToManyAddAssociationMixin<ExerciseModel, number>;
 }
 
 export default (sequelize: Sequelize) => {

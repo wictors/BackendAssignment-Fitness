@@ -5,6 +5,7 @@ import * as bodyParser from 'body-parser';
 import { sequelize } from './db';
 import publicRoutes from './routes/public';
 import adminRoutes from './routes/admin';
+import userRoutes from './routes/user';
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 
 app.use(publicRoutes());
 app.use(adminRoutes());
+app.use(userRoutes());
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });

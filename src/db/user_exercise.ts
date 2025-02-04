@@ -48,20 +48,12 @@ export default (sequelize: Sequelize) => {
       },
     },
     {
-      paranoid: true,
+      paranoid: false, // Test hard delete
       timestamps: true,
       sequelize,
       modelName: 'user_exercise',
     },
   );
-  //   UserExerciseModel.associate = (models: any) => {
-  //     ExerciseModel.belongsToMany(models.User, {
-  //       through: models.UserExercise,
-  //     });
-  //     UserModel.belongsToMany(models.Exercise, {
-  //       through: models.UserExercise,
-  //     });
-  //   };
 
   return UserExerciseModel;
 };

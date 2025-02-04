@@ -5,9 +5,7 @@ import { authenticateToken } from '../auth/authorizationToken';
 import { authorizeRole } from '../auth/authorizationRole';
 import { EXERCISE_DIFFICULTY, USER_ROLE } from '../utils/enums';
 import { UserModel } from '../db/user';
-import { where } from 'sequelize';
 import { ExerciseModel } from '../db/exercise';
-import { UserExerciseModel } from '../db/user_exercise';
 import { Program } from 'typescript';
 
 const router: Router = Router();
@@ -124,10 +122,13 @@ const missingId = (res: Response) => {
 };
 
 export default () => {
-  //router.use(authenticateToken);
-  //router.use(authorizeRole([USER_ROLE.ADMIN]));
+  router.use(authenticateToken);
+  router.use(authorizeRole([USER_ROLE.ADMIN]));
 
-  // Get all users and boolean flag to include exercises
+  /** Get all users and boolean flag to include exercises
+   * @route GET /all_users
+   * @param {boolean} req.body.exercises
+   */
   router.get(
     '/all_users',
     async (_req: Request, res: Response, _next: NextFunction) => {
@@ -169,7 +170,12 @@ export default () => {
     },
   );
 
-  // Get user by id or email and boolean flag to include exercises
+  /**Get user by id or email and boolean flag to include exercises
+   * @route GET /user
+   * @param {number} req.body.id Required
+   * @param {string} req.body.email Required
+   * @param {boolean} req.body.exercises
+   */
   router.get(
     '/user',
     async (_req: Request, res: Response, _next: NextFunction) => {
@@ -226,14 +232,26 @@ export default () => {
     },
   );
 
-  // Create exercise name, difficulty, programId are required
+  /** Create exercise name, difficulty, programId are required
+   * @route POST /exercise
+   * @param {string} req.body.name Required
+   * @param {string} req.body.difficulty Required
+   * @param {number} req.body.programId Required
+   */
   router.post('/exercise', saveExercise);
 
-  /* Update exercise by id in params and name, difficulty, programId in body.
+  /** 
+  * Update exercise by id in params and name, difficulty, programId in body.
   Edit exercise in program if programId is changed. This solution allow many-to-one relationship. 
-  Exercise can has only one program and program can have many exercises. */
-
-  // TODO: Change relationship to many-to-many for better flexibility
+  Exercise can has only one program and program can have many exercises. 
+  * TODO: Change relationship to many-to-many for better flexibility.
+    
+  * @route PUT /exercise/:id
+  * @param {number} req.params.id Required
+  * @param {string} req.body.name
+  * @param {string} req.body.difficulty
+  * @param {number} req.body.programId
+  */
   router.put('/exercise/:id/', saveExercise);
 
   // Handle error for missing id in put request for exercise
@@ -241,7 +259,10 @@ export default () => {
     return missingId(res);
   });
 
-  // Delete exercise by id in params
+  /** Delete exercise by id in params
+   * @route DELETE /exercise/:id
+   * @param {number} req.params.id Required
+   */
   router.delete('/exercise/:id/', async (_req: Request, res: Response) => {
     try {
       const { id } = _req.params;
@@ -276,7 +297,15 @@ export default () => {
     return missingId(res);
   });
 
-  // Update user role by id in params and name, surname, nickName, age, role in body
+  /** Update user role by id in params and name, surname, nickName, age, role in body
+   * @route PUT /user/:id
+   * @param {number} req.params.id Required
+   * @param {string} req.body.name
+   * @param {string} req.body.surname
+   * @param {string} req.body.nickName
+   * @param {number} req.body.age
+   * @param {string} req.body.role
+   */
   router.put('/user/:id/', async (_req: Request, res: Response) => {
     try {
       const { id } = _req.params;
@@ -321,6 +350,11 @@ export default () => {
         user.role = role;
       }
 
+      if (!anyUpdate) {
+        return res.json({
+          message: 'No changes made',
+        });
+      }
       await user.save();
 
       res.json({
