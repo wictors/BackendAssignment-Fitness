@@ -48,8 +48,7 @@ export default (sequelize: Sequelize) => {
       as: 'programDetails',
     }),
       (ExerciseModel as any).belongsToMany(models.User, {
-        through: models.UserExercise,
-        foreignKey: 'exerciseId',
+        through: { model: models.UserExercise, unique: false },
       });
   };
 
